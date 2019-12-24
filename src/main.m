@@ -1,4 +1,4 @@
-function main
+function output = main()
 
     % adding paths
     addpath(genpath('/users/gerardlee/desktop/eeg_realtime_matlab/OpenBCI_MATLAB/Matlab-Python/labstreaminglayer'));
@@ -39,13 +39,13 @@ function main
     
     disp('now receiving data...');
     
+    output = {};
+    
+
+    figure('position', [100, 100, 800, 2000]);
+    i = 1;    
     % run to print each value of the stream
-    inlet_tracker = 0;
     while true
-        if inlet_tracker == 20
-            break
-        end
-        
         % get data from the inlet
         [vec, ts] = inlet.pull_sample();
         
@@ -54,10 +54,18 @@ function main
         fprintf('%.5f\n', ts);
         
         % store [vec, ts] into variable and print its size for check
+        % size comes out 1 row and 9 columns every iteration
+        % so, the values are being replaced every iteration
         matrix = [vec, ts];
-        disp('size of the matix printing..');
-        disp(size(matrix));
-        inlet_tracker = inlet_tracker + 1;
+        output{i} = matrix;
+        if i > 2
+            for c = 1:8
+                subplot(8,1,c);
+                plot([i-1 i], [output{i-1}(c); output{i}(c)], 'b-'); hold on;
+                xlim([max([0, i - 1000]), max([1000, i])]);
+            end
+        end
+        i = i + 1;
     end
     
     
