@@ -39,33 +39,24 @@ function output = main()
     
     disp('now receiving data...');
     
-    output = {};
-    
-
-    figure('position', [100, 100, 800, 2000]);
-    i = 1;    
+    %figure('position', [100, 100, 800, 2000]);  
     % run to print each value of the stream
+    
+    disp("graph begins..");
+    output = {}
+    i = 1;
     while true
+     
         % get data from the inlet
         [vec, ts] = inlet.pull_sample();
-        
-        % display the data
-        fprintf('%.2f\t', vec);
-        fprintf('%.5f\n', ts);
-        
-        % store [vec, ts] into variable and print its size for check
-        % size comes out 1 row and 9 columns every iteration
-        % so, the values are being replaced every iteration
-        matrix = [vec, ts];
-        output{i} = matrix;
+        data = vec(1, 1);
+        output{i} = data;
         if i > 2
-            for c = 1:8
-                subplot(8,1,c);
-                plot([i-1 i], [output{i-1}(c); output{i}(c)], 'b-'); hold on;
-                xlim([max([0, i - 1000]), max([1000, i])]);
-            end
+            plot([i-1 i], [output{i-1};output{i}], 'b-'); hold on;
+            xlim([max([0, i - 1000]), max([1000, i])]);
         end
         i = i + 1;
+        disp(i);
     end
     
     
