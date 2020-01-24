@@ -38,16 +38,25 @@ function main()
     disp('opening an inlet...');
     inlet = lsl_inlet(result{1});  
     
+    % graph starts
     disp('now receiving data...');   
     disp("graph begins..");
-    get_plot(inlet);
+
+    % generate text file for testing
+    result = [];
+    for i = 1:10000
+        [vec] = inlet.pull_sample();
+        result = [result;vec];
+    end
+    disp(result);
+    writematrix(result, 'my_fft.csv');
 end
 
 function get_plot(inlet)
     x_points = [];
     y_points = [];
     figure;
-    for i = 1:5000
+    for i = 1:10000
         disp(i);
         [vec] = inlet.pull_sample();
         data = vec(1, 1);
@@ -75,10 +84,8 @@ function get_plot(inlet)
         y_points = y_temp; 
  
     end
-    plot(x_points, y_points);
+    plot(y_points);
 end
-    
-    
     
 
     
